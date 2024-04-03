@@ -83,15 +83,17 @@ def get_map_line(lines_src):
         map_line.append(line_src_index)
     return map_line
 
-def print_and_check_range_max(lines_src_1, lines_src_2, map_1, map_2, res):
-    for i in range(len(res)):
+def print_and_check_range_max(lines_src_1, lines_src_2, map_1, map_2, src):
+    res = {}
+    for i in range(len(src)):
         cur_max = 0
         cur_index = 0
-        for j in range(len(res[i])):
-            cur_max = max(cur_max, res[i][j])
-            cur_index = j if cur_max == res[i][j] else cur_index 
+        for j in range(len(src[i])):
+            cur_max = max(cur_max, src[i][j])
+            cur_index = j if cur_max == src[i][j] else cur_index 
         res[map_1[i]] = map_2[cur_index]
-        print(lines_src_1[map_1[i]], lines_src_2[map_2[cur_index]], cost[i][cur_index])
+        print(lines_src_1[map_1[i]], lines_src_2[map_2[cur_index]], src[i][cur_index])
+    return res
 
 def print_and_check_range(row_ind, col_ind, lines_src_1, lines_src_2, map_1, map_2, cost):
     res = {}
@@ -128,13 +130,14 @@ def main():
     print(res)    
 
     print("取最相似")
-    print_and_check_range_max(lines_src_1, lines_src_2, map_1, map_2, res)
+    res1 = print_and_check_range_max(lines_src_1, lines_src_2, map_1, map_2, res)
+    print(res1)
 
     print("匈牙利算法")
     cost = format_matrix(np.array(res))
     row_ind,col_ind=optimize.linear_sum_assignment(cost)
-    res = print_and_check_range(row_ind, col_ind, lines_src_1, lines_src_2, map_1, map_2, cost)
-    print(res)
+    res2 = print_and_check_range(row_ind, col_ind, lines_src_1, lines_src_2, map_1, map_2, cost)
+    print(res2)
     print(cost[row_ind,col_ind].sum())#数组求和　　输出：[0 1 2][1 0 2] [1 2 2] 5
 
 if __name__ == '__main__':
